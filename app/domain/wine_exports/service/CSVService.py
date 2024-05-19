@@ -1,39 +1,28 @@
 import csv
-
-from itertools import groupby
-from operator import itemgetter
 from typing import List
-
 from app.core.settings import settings
-from app.domain.wine_exports.model.exports import ExportData
+from app.domain.wine_exports.model.exports import ExportData, ExportLog
+from decimal import Decimal
 
 
 class CSVService:
     @staticmethod
     def read_csv() -> List[ExportData]:
-        with open(settings.EXPORT_FILE_PATH, mode='r') as file:
-            csv_reader = csv.DictReader(file)
+        with open(settings.EXPORT_FILE_PATH, mode='r', encoding='utf-8') as file:
+            csv_reader = csv.DictReader(file, delimiter=';')
             rows = list(csv_reader)
 
-        key_func = itemgetter('id', 'country')
-        rows.sort(key=key_func)
+        return [CSVService._process_row(row) for row in rows]
 
-        grouped_data = {
-            (key[0], key[1]): list(group)
-            for key, group in groupby(rows, key=key_func)
-        }
+    @staticmethod
+    def _process_row(row) -> ExportData:
+        export_logs = [CSVService._create_export_log(row, year) for year in range(1970, 2024)]
+        return ExportData(id=row["Id"], country=row["País"], export_logs=export_logs)
 
-        export_data_list = [
-            ExportData(
-                id_value=id_value,
-                country=country,
-                export_logs=[
-                    {'year': row['year'], 'quantity': row['quantity'], 'price': row['price']}
-                    for row in group
-                ]
-            )
-            for (id_value, country), group in grouped_data.items()
-        ]
-
-        return export_data_list
-
+    @staticmethod
+    def _create_export_log(row, year) -> ExportLog:
+        try:
+            return ExportLog(year=year, quantity=row.get(f"{year}_q"), price=row.get(f"{year}_v"))
+        except Exception as e:
+            print(f"No content for {row['Id']}-{year}. Error thrown: {e}")
+            return ExportLog(year=year, quantity=Decimal("0"), price=Decimal("0"))
