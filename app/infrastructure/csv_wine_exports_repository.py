@@ -1,5 +1,8 @@
 import csv
 from typing import List
+
+from pydantic import ValidationError
+
 from app.infrastructure.settings import settings
 from app.domain.wine_exports.model.exports import ExportData, ExportLog
 from app.domain.wine_exports.service.core import WineExportsRepository
@@ -23,6 +26,5 @@ class CSVExportDataRepository(WineExportsRepository):
     def _create_export_log(row, year) -> ExportLog:
         try:
             return ExportLog(year=year, quantity=row.get(f"{year}_q"), price=row.get(f"{year}_v"))
-        except Exception as e:
-            print(f"No content for {row['Id']}-{year}. Error thrown: {e}")
-            return ExportLog(year=year, quantity=Decimal("0"), price=Decimal("0"))
+        except ValidationError:
+            return ExportLog(year=year, quantity=Decimal(0), price=Decimal(0))
