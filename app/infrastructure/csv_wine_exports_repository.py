@@ -2,7 +2,7 @@ import csv
 from typing import List
 from app.core.settings import settings
 from app.domain.wine_exports.model.exports import ExportData, ExportLog
-from app.domain.wine_exports.service.wine_exports_service import WineExportsRepository
+from app.domain.wine_exports.service.core import WineExportsRepository
 from decimal import Decimal
 
 
