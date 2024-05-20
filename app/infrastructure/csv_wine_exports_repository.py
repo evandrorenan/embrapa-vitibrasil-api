@@ -1,6 +1,6 @@
 import csv
 from typing import List
-from app.core.settings import settings
+from app.infrastructure.settings import settings
 from app.domain.wine_exports.model.exports import ExportData, ExportLog
 from app.domain.wine_exports.service.core import WineExportsRepository
 from decimal import Decimal
@@ -8,7 +8,7 @@ from decimal import Decimal
 
 class CSVExportDataRepository(WineExportsRepository):
     def get_all_wine_exports_data(self) -> List[ExportData]:
-        with open(settings.EXPORT_FILE_PATH, mode='r', encoding='utf-8') as file:
+        with open(settings.WINE_EXPORT_FILE_PATH, mode='r', encoding='utf-8') as file:
             csv_reader = csv.DictReader(file, delimiter=';')
             rows = list(csv_reader)
 
