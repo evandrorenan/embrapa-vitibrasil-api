@@ -1,22 +1,22 @@
 import csv
 from typing import List
-from app.core.settings import settings
+from app.infrastructure.settings import settings
 from app.domain.wine_exports.model.exports import ExportData, ExportLog
+from app.domain.wine_exports.service.core import WineExportsRepository
 from decimal import Decimal
 
 
-class CSVService:
-    @staticmethod
-    def read_csv() -> List[ExportData]:
-        with open(settings.EXPORT_FILE_PATH, mode='r', encoding='utf-8') as file:
+class CSVExportDataRepository(WineExportsRepository):
+    def get_all_wine_exports_data(self) -> List[ExportData]:
+        with open(settings.WINE_EXPORT_FILE_PATH, mode='r', encoding='utf-8') as file:
             csv_reader = csv.DictReader(file, delimiter=';')
             rows = list(csv_reader)
 
-        return [CSVService._process_row(row) for row in rows]
+        return [CSVExportDataRepository._process_row(row) for row in rows]
 
     @staticmethod
     def _process_row(row) -> ExportData:
-        export_logs = [CSVService._create_export_log(row, year) for year in range(1970, 2024)]
+        export_logs = [CSVExportDataRepository._create_export_log(row, year) for year in range(1970, 2024)]
         return ExportData(id=row["Id"], country=row["País"], export_logs=export_logs)
 
     @staticmethod

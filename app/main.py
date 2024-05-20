@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from app.api.wine_exports.v1.endpoints import wine_exports
+from app.api.v1.endpoints import wine_exports
 
 
 app = FastAPI()
