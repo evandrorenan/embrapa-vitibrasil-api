@@ -1,13 +1,13 @@
 from decimal import Decimal
 import pytest
 from fastapi.testclient import TestClient
-from app.di.dependencies import get_service
+from app.di.dependencies import get_wine_exports_service
 from app.domain.wine_exports.model.exports import ExportData, ExportLog
-from app.domain.wine_exports.service.core import WineExportService
+from app.domain.wine_exports.service.core import WineExportsService
 from app.main import app
 
 
-class MockWineExportService(WineExportService):
+class MockWineExportsService(WineExportsService):
     def list_all(self):
         return [
             ExportData(id=1, country="Brazil", export_logs=[ExportLog(year=2022, quantity=Decimal("20"), price="200")]),
@@ -15,22 +15,22 @@ class MockWineExportService(WineExportService):
         ]
 
 
-class FailingMockWineExportService(WineExportService):
+class FailingMockWineExportsService(WineExportsService):
     def list_all(self):
         raise Exception("Database connection error")
 
 
 def get_mock_service():
-    return MockWineExportService()
+    return MockWineExportsService()
 
 
 def get_failing_mock_service():
-    return FailingMockWineExportService()
+    return FailingMockWineExportsService()
 
 
 @pytest.fixture
 def client():
-    app.dependency_overrides[get_service] = get_mock_service
+    app.dependency_overrides[get_wine_exports_service] = get_mock_service
     with TestClient(app) as c:
         yield c
     app.dependency_overrides = {}
@@ -38,7 +38,7 @@ def client():
 
 @pytest.fixture
 def failing_client():
-    app.dependency_overrides[get_service] = get_failing_mock_service
+    app.dependency_overrides[get_wine_exports_service] = get_failing_mock_service
     with TestClient(app) as c:
         yield c
     app.dependency_overrides = {}

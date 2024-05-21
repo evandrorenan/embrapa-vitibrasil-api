@@ -8,12 +8,9 @@ class WineExportsRepository:
         pass
 
 
-class WineExportService:
+class WineExportsService:
     def __init__(self, wine_export_repository: WineExportsRepository = Depends()):
         self.wine_export_repository = wine_export_repository
 
     def list_all(self) -> List[ExportData]:
         return self.wine_export_repository.get_all_wine_exports_data()
-
-
-
