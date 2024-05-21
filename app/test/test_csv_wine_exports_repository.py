@@ -1,8 +1,10 @@
-import pytest
 from unittest.mock import patch, mock_open
+
+import pytest
+
 from app.domain.wine_exports.model.exports import ExportLog
-from app.infrastructure.csv_wine_exports_repository import CSVExportDataRepository
-from app.infrastructure.settings import settings
+from app.infrastructure import settings
+from app.infrastructure.repositories.csv_wine_exports_repository import CSVExportDataRepository
 
 csv_data = """Id;País;1970_q;1970_v;1971_q;1971_v
 1;Country1;100;200;150;250
@@ -11,10 +13,12 @@ csv_data = """Id;País;1970_q;1970_v;1971_q;1971_v
 
 settings.WINE_EXPORT_FILE_PATH = "fake/path/to/wine_exports.csv"
 
+
 @pytest.fixture
 def mock_csv_file():
     with patch("builtins.open", mock_open(read_data=csv_data)):
         yield
+
 
 def test_get_all_wine_exports_data(mock_csv_file):
     repository = CSVExportDataRepository()

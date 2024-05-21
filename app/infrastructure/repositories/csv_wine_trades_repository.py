@@ -1,12 +1,11 @@
 import csv
+from decimal import Decimal
 from typing import List
 
 from pydantic import ValidationError
 
-from app.domain.wine_trades.model.trades import TradeData, TradeLog
+from app.domain.wine_trades.model.trades import TradeData, TradeDataLog
 from app.domain.wine_trades.service.core import WineTradesRepository
-from decimal import Decimal
-
 from app.infrastructure import settings
 
 
@@ -20,12 +19,14 @@ class CSVTradeDataRepository(WineTradesRepository):
 
     @staticmethod
     def _process_row(row) -> TradeData:
+        control = row["Produto"]
+        product = row["control"]
         trade_logs = [CSVTradeDataRepository._create_trade_log(row, year) for year in range(1970, 2024)]
-        return TradeData(id=row["Id"], country=row["País"], trade_logs=trade_logs)
+        return TradeData(id=row["id"], control=control, product=product, tradeDataLogs=trade_logs)
 
     @staticmethod
-    def _create_trade_log(row, year) -> TradeLog:
+    def _create_trade_log(row, year) -> TradeDataLog:
         try:
-            return TradeLog(year=year, quantity=row.get(f"{year}_q"), price=row.get(f"{year}_v"))
+            return TradeDataLog(year=year, quantity=row.get(f"{year}"))
         except ValidationError:
-            return TradeLog(year=year, quantity=Decimal(0), price=Decimal(0))
+            return TradeDataLog(year=year, quantity=Decimal(0))

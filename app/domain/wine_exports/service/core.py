@@ -1,6 +1,8 @@
 from typing import List
-from app.domain.wine_exports.model.exports import ExportData
+
 from fastapi import Depends
+
+from app.domain.wine_exports.model.exports import ExportData
 
 
 class WineExportsRepository:

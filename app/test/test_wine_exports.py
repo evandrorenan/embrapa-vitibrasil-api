@@ -1,6 +1,8 @@
 from decimal import Decimal
+
 import pytest
 from fastapi.testclient import TestClient
+
 from app.di.dependencies import get_wine_exports_service
 from app.domain.wine_exports.model.exports import ExportData, ExportLog
 from app.domain.wine_exports.service.core import WineExportsService
@@ -46,7 +48,7 @@ def failing_client():
 
 def test_get_wine_exports_data_success(client):
     response = client.get("api/v1/wine-exports")
-    print (response.json())
+    print(response.json())
     assert response.status_code == 200
     assert response.json() == [
         {'id': 1, 'country': 'Brazil', 'export_logs': [

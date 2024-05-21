@@ -4,13 +4,13 @@ from typing import List
 from pydantic import BaseModel
 
 
-class ExportLog(BaseModel):
+class ImportLog(BaseModel):
     year: int
     quantity: Decimal
     price: Decimal
 
 
-class ExportData(BaseModel):
+class ImportData(BaseModel):
     id: int
     country: str
-    export_logs: List[ExportLog]
+    import_logs: List[ImportLog]

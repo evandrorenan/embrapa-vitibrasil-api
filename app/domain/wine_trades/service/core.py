@@ -1,5 +1,7 @@
 from typing import List
+
 from fastapi import Depends
+
 from app.domain.wine_trades.model.trades import TradeData
 
 

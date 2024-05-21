@@ -1,12 +1,12 @@
 import csv
+from decimal import Decimal
 from typing import List
 
 from pydantic import ValidationError
 
-from app.infrastructure.settings import settings
 from app.domain.wine_exports.model.exports import ExportData, ExportLog
 from app.domain.wine_exports.service.core import WineExportsRepository
-from decimal import Decimal
+from app.infrastructure import settings
 
 
 class CSVExportDataRepository(WineExportsRepository):
