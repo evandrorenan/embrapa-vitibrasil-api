@@ -22,7 +22,6 @@ class CSVProductionDataRepository(WineProductionRepository):
     def _process_row(self, row) -> ProductionData:
         id = row["id"]
         product = row["produto"]
-        print(f"_process_row: {id} - {product}")
         group_id = self._get_group_id(id, product)
         production_logs = [self._create_production_log(row, year) for year in range(1970, 2024)]
         return ProductionData(id=id, product=product, groupId=group_id, productionLogs=production_logs)

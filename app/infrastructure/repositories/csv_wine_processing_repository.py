@@ -19,10 +19,10 @@ class CSVProcessingDataRepository(WineProcessingRepository):
 
     @staticmethod
     def _process_row(row) -> ProcessingData:
-        control = row["cultivar"]
-        product = row["control"]
+        control = row["control"]
+        cultivar = row["cultivar"]
         processing_logs = [CSVProcessingDataRepository._create_processing_log(row, year) for year in range(1970, 2024)]
-        return ProcessingData(id=row["id"], control=control, product=product, processingDataLogs=processing_logs)
+        return ProcessingData(id=row["id"], control=control, cultivar=cultivar, processingDataLogs=processing_logs)
 
     @staticmethod
     def _create_processing_log(row, year) -> ProcessingDataLog:

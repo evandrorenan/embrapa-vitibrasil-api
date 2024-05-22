@@ -11,5 +11,5 @@ class ProcessingDataLog(BaseModel):
 class ProcessingData(BaseModel):
     id: int
     control: str
-    product: str
+    cultivar: str
     processingDataLogs: List[ProcessingDataLog]
